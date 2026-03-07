@@ -103,7 +103,7 @@ def test_invalid_command(monkeypatch):
     assert "Please choose from the list of available commands: add, subtract, multiply, divide, power, root, modulus, integer divide, percent, absolute difference." in output
 
 def test_invalid_number(monkeypatch):
-    inputs = ["add", "hello", "3", "exit"]
+    inputs = ["add", "five", "3", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Please enter two valid numbers" in output
 
