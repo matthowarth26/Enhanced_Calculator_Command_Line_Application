@@ -1,15 +1,15 @@
 """Calculations"""
 
-def addition(a: float, b: float) -> float:
+def add(a: float, b: float) -> float:
     return a + b 
 
-def subtraction(a: float, b: float) -> float:
+def subtract(a: float, b: float) -> float:
     return a - b 
 
-def multiplcation(a: float, b: float) -> float:
+def multiply(a: float, b: float) -> float:
     return a * b 
 
-def division(a: float, b: float) -> float:
+def divide(a: float, b: float) -> float:
     if b == 0:
         raise ValueError("Cannot divide by zero")
     return a / b
