@@ -105,7 +105,12 @@ def test_invalid_command(monkeypatch):
 def test_invalid_number(monkeypatch):
     inputs = ["add", "five", "3", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
-    assert "Please enter two valid numbers" in output
+    assert "Error: Invalid number: five" in output
+
+def test_invalid_max_number(monkeypatch):
+    inputs = ["add", "2000000000", "3", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Error: 2000000000.0 exceeds maximum allowed value: 1000000000" in output
 
 """Test Exit"""
 def test_exit(monkeypatch):
