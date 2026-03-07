@@ -7,3 +7,7 @@ class CalculatorError(Exception):
 class OperationError(CalculatorError):
     """ExcpExceptionetion raised when calculation operation failure"""
     pass
+
+class ValidationError(CalculatorError):
+    """Exception raised when user input is invalid """
+    pass
