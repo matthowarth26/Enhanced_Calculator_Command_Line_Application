@@ -1,6 +1,7 @@
 """Calulator REPL"""
 from app.operations import add, subtract, multiply, divide, power, root, modulus, int_divide, percent, abs_diff
-from app.exceptions import OperationError
+from app.exceptions import OperationError, ValidationError
+from app.input_validators import validate_input_is_number
 
 def Calculator():
     print("Welcome to the calculator app!")
@@ -20,12 +21,14 @@ def Calculator():
             if a.lower() == "exit" or b.lower() == "exit":
                 print("Exiting REPL")
                 break 
+            
             try: 
-                a = float(a)
-                b = float(b)
-            except ValueError:
+                a = validate_input_is_number(a)
+                b = validate_input_is_number(b)
+            except ValidationError:
                 print("Please enter two valid numbers")
                 continue 
+            
             try:
                 if user_input == 'add':
                     result = add(a, b)
