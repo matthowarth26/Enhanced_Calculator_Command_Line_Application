@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from app.operations import Operation
+from app.exceptions import OperationError
 
 # Abstract Class Method for calculations 
 class Calculation(ABC):
@@ -58,3 +59,28 @@ class Percentage(Calculation):
 class AbsoluteDifference(Calculation):
     def compute(self):
         return Operation.abs_diff(self.a, self.b)
+    
+class CalculationFactory:
+    """
+    Factory class for creating calculation instances
+    """
+
+    @staticmethod
+    def create_calculation(operation_type: str, a: float, b: float) -> Calculation:
+        calculations = {
+            "add": Addition,
+            "subtract": Subtraction,
+            "multiply": Multiplication,
+            "divide": Division,
+            "power": Power, 
+            "root": Root,
+            "modulus": Modulus,
+            "integer divide": IntegerDivision,
+            "percent": Percentage,
+            "absolute difference": AbsoluteDifference
+        }
+
+        if operation_type not in calculations:
+            raise OperationError(f"Invalid operation: {operation_type}")
+        
+        return calculations[operation_type](a,b)
