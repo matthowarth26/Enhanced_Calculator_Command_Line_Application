@@ -100,7 +100,8 @@ def test_percent_with_zero(monkeypatch):
 def test_invalid_command(monkeypatch):
     inputs = ["square", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
-    assert "Please choose from the list of available commands: add, subtract, multiply, divide, power, root, modulus, integer divide, percent, absolute difference, help, or exit." in output
+    assert "Please choose from the list of available commands: add, subtract, multiply, divide, power, root, "
+    "modulus, integer divide, percent, absolute difference, history, clear, undo, redo, help, or exit." in output
 
 def test_invalid_number(monkeypatch):
     inputs = ["add", "five", "3", "exit"]
@@ -156,3 +157,28 @@ def test_history_repl_clear_list(monkeypatch):
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Calculator history cleared" in output
     assert "Calculator history is empty" in output 
+
+"""Test Undo/Redo Functionality"""
+def test_undo_calculation_repl(monkeypatch):
+    inputs = ["add", "1", "1", "undo", "history", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Result: 2.0" in output
+    assert "Undo" in output
+    assert "Calculator history is empty" in output
+
+def test_redo_calculation_repl(monkeypatch):
+    inputs = ["add", "1", "1", "undo", "redo", "history", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Undo" in output
+    assert "Redo" in output
+    assert "Addition(1.0, 1.0) = 2.0" in output
+
+def test_undo_calculation_empty_history_repl(monkeypatch):
+    inputs = ["undo", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Error: Calculator history is empty - no calculation to undo" in output
+
+def test_redo_calculation_empty_history_repl(monkeypatch):
+    inputs = ["redo", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Error: No calculations to redo" in output
