@@ -2,6 +2,7 @@
 from app.calculation import CalculationFactory
 from app.exceptions import OperationError, ValidationError
 from app.input_validators import validate_two_valid_inputs
+from app.history import History
 
 def display_help() -> None:
     """ 
@@ -14,6 +15,8 @@ def display_help() -> None:
     for operation in operation_list:
         print(f" - {operation}")
 
+    print(" - history")
+    print(" - clear")
     print(" - help")
     print(" - exit")
     
@@ -25,6 +28,9 @@ def Calculator():
 
     # List of possible operations 
     operation_list = CalculationFactory.get_supported_operations()
+
+    # Instantiate history list
+    history_list = History()
 
     # Start Loop 
     while True: 
@@ -40,8 +46,25 @@ def Calculator():
         if user_input == "help":
             display_help()
             continue
+        
+        if user_input == "history":
+            calculator_history = history_list.get_history()
 
-        # Check if user inputs one of the possible operations 
+            if not calculator_history:
+                print("Calculator history is empty")
+            else:
+                print("Calculator History:")
+                for calculation in calculator_history:
+                    print(calculation)
+            
+            continue 
+        
+        if user_input == 'clear':
+            history_list.clear_history()
+            print("Calculator history cleared")
+            continue 
+
+        # Check if user inputs an invalid operation 
         if user_input not in operation_list:
             print("Please choose from the list of available commands: " 
                   + ", ".join(operation_list)+", help, or exit.")
@@ -62,7 +85,8 @@ def Calculator():
         try: 
             a, b = validate_two_valid_inputs(a, b)
             calculation = CalculationFactory.create_calculation(user_input, a, b) # Use CalculationFactory method for inputted operation  
-            result = calculation.compute()
+            result = calculation.compute() 
+            history_list.add_calculation(calculation) # Save operation in history list  
             print(f"Result: {result}")
             
         except (ValidationError, OperationError) as e:
