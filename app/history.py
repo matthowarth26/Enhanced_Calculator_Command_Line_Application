@@ -1,8 +1,9 @@
 from app.calculation import Calculation
+from app.exceptions import HistoryError
 
 class History:
     """
-    Storage and manage user input history for completed operations
+    Store and manage user input history for completed operations
     """
 
     def __init__(self) -> None:
@@ -29,3 +30,21 @@ class History:
         """
         self._history.clear()
     
+    def is_empty(self) -> bool:
+        """
+        Check if history list is empty - return true if empty, else false
+        """
+        return len(self._history) == 0
+    
+    def return_last_calculation(self) -> Calculation: 
+        """
+        Return most recent operation 
+        """
+        if self.is_empty():
+            raise HistoryError("Calculator history is empty")
+        return self._history[-1]
+
+    def drop_last_calculation(self) -> Calculation:
+        if self.is_empty():
+            raise HistoryError("Calculator history is empty")
+        return self._history.pop()
