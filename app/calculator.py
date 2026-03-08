@@ -3,6 +3,20 @@ from app.calculation import CalculationFactory
 from app.exceptions import OperationError, ValidationError
 from app.input_validators import validate_two_valid_inputs
 
+def display_help() -> None:
+    """ 
+    Display help menu for Calculator REPL
+    """
+    # List of possible operations 
+    operation_list = CalculationFactory.get_supported_operations()
+
+    print("\nAvailable commands:")
+    for operation in operation_list:
+        print(f" - {operation}")
+
+    print(" - help")
+    print(" - exit")
+    
 def Calculator():
     """
     Calculator REPL for user to input operation and 2 numbers
@@ -14,16 +28,23 @@ def Calculator():
 
     # Start Loop 
     while True: 
-        user_input = input("Input the operation you would like to perform, or type 'exit' to quit: ").lower().strip()
+        user_input = input("Input the operation you would like to perform, type 'help' for operation list, "
+        "or type 'exit' to quit: ").lower().strip()
 
         # Check if user inputs exit 
-        if user_input== "exit":
+        if user_input == "exit":
             print("Exiting REPL")
             break 
         
+        # Check if user inputs help 
+        if user_input == "help":
+            display_help()
+            continue
+
         # Check if user inputs one of the possible operations 
         if user_input not in operation_list:
-            print("Please choose from the list of available commands: " + ", ".join(operation_list)+".")
+            print("Please choose from the list of available commands: " 
+                  + ", ".join(operation_list)+", help, or exit.")
             continue 
         
         print("Calculator takes two numbers:")
