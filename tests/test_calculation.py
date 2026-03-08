@@ -1,6 +1,6 @@
 import pytest
 
-from app.calculation import Calculation, Addition, Subtraction, Multiplication, Division, Power, Root, Modulus, IntegerDivision, Percentage, AbsoluteDifference
+from app.calculation import Calculation, Addition, Subtraction, Multiplication, Division, Power, Root, Modulus, IntegerDivision, Percentage, AbsoluteDifference, CalculationFactory
 from app.exceptions import OperationError
 
 def test_addition_compute():
@@ -55,3 +55,43 @@ def test_str():
 def test_repr():
     calculation = Addition(1, 1)
     assert repr(calculation) == "Addition(a=1, b=1)"
+
+def test_calculation_factory_addition():
+    calculation = CalculationFactory.create_calculation("add", 1, 1)
+    assert calculation.compute() == 2
+
+def test_calculation_factory_subtraction():
+    calculation = CalculationFactory.create_calculation("subtract", 1, 1)
+    assert calculation.compute() == 0
+
+def test_calculation_factory_multiplication():
+    calculation = CalculationFactory.create_calculation("multiply", 1, 1)
+    assert calculation.compute() == 1
+
+def test_calculation_factory_division():
+    calculation = CalculationFactory.create_calculation("divide", 4, 2)
+    assert calculation.compute() == 2
+
+def test_calculation_factory_power():
+    calculation = CalculationFactory.create_calculation("power", 2, 2)
+    assert calculation.compute() == 4
+
+def test_calculation_factory_root():
+    calculation = CalculationFactory.create_calculation("root", 36, 2)
+    assert calculation.compute() == 6
+
+def test_calculation_factory_modulus():
+    calculation = CalculationFactory.create_calculation("modulus", 13, 3)
+    assert calculation.compute() == 1
+
+def test_calculation_factory_int_divide():
+    calculation = CalculationFactory.create_calculation("integer divide", 10, 3)
+    assert calculation.compute() == 3
+
+def test_calculation_factory_percent():
+    calculation = CalculationFactory.create_calculation("percent", 10, 100)
+    assert calculation.compute() == 10
+
+def test_calculation_factory_abs_diff():
+    calculation = CalculationFactory.create_calculation("absolute difference", 4, 5)
+    assert calculation.compute() == 1
