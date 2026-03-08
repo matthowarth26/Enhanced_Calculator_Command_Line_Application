@@ -1,6 +1,6 @@
 """Calulator REPL"""
 from app.calculation import CalculationFactory
-from app.exceptions import OperationError, ValidationError
+from app.exceptions import OperationError, ValidationError, HistoryError
 from app.input_validators import validate_two_valid_inputs
 from app.history import History
 
@@ -17,6 +17,8 @@ def display_help() -> None:
 
     print(" - history")
     print(" - clear")
+    print(" - undo")
+    print(" - redo")
     print(" - help")
     print(" - exit")
     
@@ -54,8 +56,8 @@ def Calculator():
                 print("Calculator history is empty")
             else:
                 print("Calculator History:")
-                for calculation in calculator_history:
-                    print(calculation)
+                for i, calculation in enumerate(calculator_history, start=1):
+                    print(f"{i}: {calculation}")
             
             continue 
         
@@ -63,11 +65,27 @@ def Calculator():
             history_list.clear_history()
             print("Calculator history cleared")
             continue 
+        
+        if user_input == "undo":
+            try:
+                calculation = history_list.undo()
+                print(f"Undo: {calculation}")
+            except HistoryError as e:
+                print(f"Error: {e}")
+            continue
+
+        if user_input == "redo":
+            try:
+                calculation = history_list.redo() 
+                print(f"Redo: {calculation}")
+            except HistoryError as e:
+                print(f"Error: {e}")
+            continue 
 
         # Check if user inputs an invalid operation 
         if user_input not in operation_list:
             print("Please choose from the list of available commands: " 
-                  + ", ".join(operation_list)+", help, or exit.")
+                  + ", ".join(operation_list)+", history, clear, undo, redo, help, or exit.")
             continue 
         
         print("Calculator takes two numbers:")
