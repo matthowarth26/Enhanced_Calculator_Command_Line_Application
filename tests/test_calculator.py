@@ -122,7 +122,6 @@ def test_exit(monkeypatch):
 def test_help_message(monkeypatch):
     inputs = ["help", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
-
     assert "Available commands:" in output
     assert "add" in output
     assert "subtract" in output
@@ -134,5 +133,26 @@ def test_help_message(monkeypatch):
     assert "integer divide" in output
     assert "percent" in output
     assert "absolute difference" in output 
+    assert "history" in output
+    assert "clear" in output
     assert "exit" in output
     assert "help" in output
+
+"""Test History"""
+def test_history_list_repl_is_empty(monkeypatch):
+    inputs = ["history", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Calculator history is empty" in output
+
+def test_history_repl_add_one_operation(monkeypatch):
+    inputs = ["add", "1", "1", "history", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Result: 2.0" in output
+    assert "Calculator History:" in output
+    assert "Addition(1.0, 1.0)" in output
+
+def test_history_repl_clear_list(monkeypatch):
+    inputs = ["add", "1", "1", "clear", "history", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+    assert "Calculator history cleared" in output
+    assert "Calculator history is empty" in output 
