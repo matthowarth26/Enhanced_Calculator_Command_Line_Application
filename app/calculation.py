@@ -15,7 +15,8 @@ class Calculation(ABC):
         pass 
 
     def __str__(self):
-        return f"{self.__class__.__name__}({self.a}, {self.b})"
+        result = self.compute()                                                 # Store result for history 
+        return f"{self.__class__.__name__}({self.a}, {self.b}) = {result}"      # Updated result string for history Operation(a, b) = Result 
 
     def __repr__(self):
         return f"{self.__class__.__name__}(a={self.a}, b={self.b})"
