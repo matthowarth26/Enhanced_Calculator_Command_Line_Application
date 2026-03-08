@@ -1,5 +1,5 @@
 """Calulator REPL"""
-from app.operations import add, subtract, multiply, divide, power, root, modulus, int_divide, percent, abs_diff
+from app.operations import Operation
 from app.exceptions import OperationError, ValidationError
 from app.input_validators import validate_input_is_number, validate_max_input_value, validate_two_valid_inputs
 
@@ -32,34 +32,34 @@ def Calculator():
             
             try:
                 if user_input == 'add':
-                    result = add(a, b)
+                    result = Operation.add(a, b)
                 
                 elif user_input == 'subtract':
-                    result = subtract(a, b)
+                    result = Operation.subtract(a, b)
                 
                 elif user_input == 'multiply':
-                    result = multiply(a, b)
+                    result = Operation.multiply(a, b)
                 
                 elif user_input == 'divide':
-                    result = divide(a, b)
+                    result = Operation.divide(a, b)
                 
                 elif user_input == 'power':
-                    result = power(a, b)      
+                    result = Operation.power(a, b)      
                 
                 elif user_input == 'root':
-                    result = root(a, b) 
+                    result = Operation.root(a, b) 
                 
                 elif user_input == 'modulus':
-                    result = modulus(a, b)     
+                    result = Operation.modulus(a, b)     
                 
                 elif user_input == 'integer divide':
-                    result = int_divide(a, b)     
+                    result = Operation.int_divide(a, b)     
                 
                 elif user_input == 'percent':
-                    result = percent(a, b)   
+                    result = Operation.percent(a, b)   
                 
                 elif user_input == 'absolute difference':
-                    result = abs_diff(a, b)       
+                    result = Operation.abs_diff(a, b)       
                 
                 print(f"Result: {result}")
             
