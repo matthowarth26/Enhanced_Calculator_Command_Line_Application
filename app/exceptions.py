@@ -11,3 +11,7 @@ class OperationError(CalculatorError):
 class ValidationError(CalculatorError):
     """Exception raised when user input is invalid """
     pass
+
+class HistoryError(CalculatorError):
+    """Exception raised when history action fails"""    
+    pass
