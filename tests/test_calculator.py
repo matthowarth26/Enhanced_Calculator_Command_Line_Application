@@ -149,7 +149,7 @@ def test_history_repl_add_one_operation(monkeypatch):
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Result: 2.0" in output
     assert "Calculator History:" in output
-    assert "Addition(1.0, 1.0)" in output
+    assert "Addition(1.0, 1.0) = 2.0" in output
 
 def test_history_repl_clear_list(monkeypatch):
     inputs = ["add", "1", "1", "clear", "history", "exit"]
