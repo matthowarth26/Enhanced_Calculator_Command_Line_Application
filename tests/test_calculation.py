@@ -50,7 +50,7 @@ def test_division_by_zero_compute():
 
 def test_str():
     calculation = Addition(1, 1)
-    assert str(calculation) == "Addition(1, 1)"
+    assert str(calculation) == "Addition(1, 1) = 2"
 
 def test_repr():
     calculation = Addition(1, 1)
