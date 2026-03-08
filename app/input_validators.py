@@ -18,3 +18,15 @@ def validate_max_input_value(value, max_value=1_000_000_000):
         raise ValidationError(f"{value} exceeds maximum allowed value: {max_value}")
     
     return value
+
+def validate_two_valid_inputs(a, b):
+    """
+    Validate that both inputs can be converted to numbers and do not exceed max value
+    """
+    a = validate_input_is_number(a)
+    b = validate_input_is_number(b)
+
+    a = validate_max_input_value(a)
+    b = validate_max_input_value(b)
+
+    return a, b
