@@ -68,16 +68,16 @@ def Calculator():
         
         if user_input == "undo":
             try:
-                calculation = history_list.undo()
-                print(f"Undo: {calculation}")
+                history_list.undo()
+                print("Undo calculation")
             except HistoryError as e:
                 print(f"Error: {e}")
             continue
 
         if user_input == "redo":
             try:
-                calculation = history_list.redo() 
-                print(f"Redo: {calculation}")
+                history_list.redo() 
+                print("Redo calculation")
             except HistoryError as e:
                 print(f"Error: {e}")
             continue 
