@@ -1,6 +1,7 @@
 from app.calculation import Calculation
 from app.exceptions import HistoryError
 from app.calculator_memento import CalculatorMemento
+from app.logger import Observer
 
 class History:
     """
@@ -14,6 +15,7 @@ class History:
         self._history: list[Calculation] = []
         self._undo_mementos: list[Calculation] = [] 
         self._redo_mementos: list[Calculation] = []
+        self._observers = []
 
     def save_to_memento(self) -> CalculatorMemento:
         """
@@ -34,6 +36,7 @@ class History:
         self._undo_mementos.append(self.save_to_memento())
         self._history.append(calculation)
         self._redo_mementos.clear()
+        self.notify_observers(calculation)
     
     def get_history(self) -> list[Calculation]:
         """
@@ -100,3 +103,16 @@ class History:
         Check if redo stack is empty
         """
         return len(self._redo_mementos) == 0
+    
+    def add_observer(self, observer) -> None: 
+        """
+        Add an observer
+        """
+        self._observers.append(observer)
+    
+    def notify_observers(self, calculation: Calculation) -> None:
+        """
+        Notify observers about new calculation
+        """
+        for observer in self._observers:
+            observer.update(calculation)
