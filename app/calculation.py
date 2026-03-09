@@ -21,6 +21,16 @@ class Calculation(ABC):
     def __repr__(self):
         return f"{self.__class__.__name__}(a={self.a}, b={self.b})"
 
+    def to_dict(self) -> dict:
+        """
+        Convert calculation into a dictionary for saving to CSV
+        """
+        return {
+            "operation": self.__class__.__name__,
+            "operand1": self.a,
+            "operand2": self.b,
+            "result": self.compute()
+        }
 # Calculation Factory 
 class Addition(Calculation):
     def compute(self) -> float:
