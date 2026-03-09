@@ -95,3 +95,12 @@ def test_calculation_factory_percent():
 def test_calculation_factory_abs_diff():
     calculation = CalculationFactory.create_calculation("absolute difference", 4, 5)
     assert calculation.compute() == 1
+
+def test_calculation_to_dict():
+    calculation = CalculationFactory.create_calculation("add", 1, 1)
+    result = calculation.to_dict()
+
+    assert result["operation"] == "Addition"
+    assert result["operand1"] == 1
+    assert result["operand2"] == 1
+    assert result["result"] == 2
