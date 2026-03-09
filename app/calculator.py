@@ -4,6 +4,7 @@ from app.exceptions import OperationError, ValidationError, HistoryError
 from app.input_validators import validate_two_valid_inputs
 from app.history import History
 from app.logger import LoggingObserver, AutoSaveObserver
+from app.calculator_config import CalculatorConfig
 
 def display_help() -> None:
     """ 
@@ -20,6 +21,8 @@ def display_help() -> None:
     print(" - clear")
     print(" - undo")
     print(" - redo")
+    print(" - save")
+    print(" - load")
     print(" - help")
     print(" - exit")
     
@@ -34,6 +37,7 @@ def Calculator():
 
     # Instantiate history list & observer 
     history_list = History()
+    history_file = CalculatorConfig.get_history_file()
     logging_observer = LoggingObserver()
     autosave_observer = AutoSaveObserver(history_list)
 
@@ -88,10 +92,26 @@ def Calculator():
                 print(f"Error: {e}")
             continue 
 
+        if user_input == "save":
+            try:
+                history_list.save_to_csv(history_file)
+                print(f"History saved to {history_file}")
+            except HistoryError as e:
+                print(f"Error: {e}")
+            continue
+
+        if user_input == "load":
+            try:
+                history_list.load_from_csv(history_file)
+                print(f"History loaded from {history_file}")
+            except HistoryError as e:
+                print(f"Error: {e}")
+            continue
+
         # Check if user inputs an invalid operation 
         if user_input not in operation_list:
             print("Please choose from the list of available commands: " 
-                  + ", ".join(operation_list)+", history, clear, undo, redo, help, or exit.")
+                  + ", ".join(operation_list)+", history, clear, undo, redo, save, load, help, or exit.")
             continue 
         
         print("Calculator takes two numbers:")
