@@ -1,5 +1,6 @@
 from app.calculation import Calculation
 from app.exceptions import HistoryError
+from app.calculator_memento import CalculatorMemento
 
 class History:
     """
@@ -11,14 +12,28 @@ class History:
         Initialize a list to store history of operations
         """
         self._history: list[Calculation] = []
-        self._redo_stack: list[Calculation] = []
+        self._undo_mementos: list[Calculation] = [] 
+        self._redo_mementos: list[Calculation] = []
+
+    def save_to_memento(self) -> CalculatorMemento:
+        """
+        Save current history snapshot to memento
+        """
+        return CalculatorMemento(self._history)
+    
+    def restore_from_memento(self, memento: CalculatorMemento) -> None:
+        """"
+        Restor history snapshot from memento
+        """
+        self._history = memento.return_saved_state()
 
     def add_calculation(self, calculation: Calculation) -> None:
         """
-        Add an operation object to history list
+        Add an operation object to history list & save current state 
         """
+        self._undo_mementos.append(self.save_to_memento())
         self._history.append(calculation)
-        self._redo_stack.clear()
+        self._redo_mementos.clear()
     
     def get_history(self) -> list[Calculation]:
         """
@@ -28,14 +43,15 @@ class History:
     
     def clear_history(self) -> None:
         """
-        Clear all operations from history list
+        Clear all operations from history list & save current state 
         """
+        self._undo_mementos.append(self.save_to_memento())
         self._history.clear()
-        self._redo_stack.clear()
+        self._redo_mementos.clear()
     
     def is_empty(self) -> bool:
         """
-        Check if history list is empty - return true if empty, else false
+        Check if history list is empty
         """
         return len(self._history) == 0
     
@@ -49,36 +65,38 @@ class History:
 
     def drop_last_calculation(self) -> Calculation:
         """
-        Remove most recent operation 
+        Remove most recent operation & save current state  
         """
         if self.is_empty():
             raise HistoryError("Calculator history is empty")
+        self._undo_mementos.append(self.save_to_memento())
+        self._redo_mementos.clear()        
         return self._history.pop()
-    
-    def undo(self) -> Calculation:
-        """"
-        Undo most recent operation by moving it to the redo stack 
-        """
-        if self.is_empty():
-            raise HistoryError("Calculator history is empty - no calculation to undo")
         
-        calculation = self._history.pop()
-        self._redo_stack.append(calculation)
-        return calculation
-    
-    def redo(self) -> Calculation:
+    def undo(self) -> None:
         """"
-        Redo the most recently undone operation by moving it back to the history list
+        Restore previous saved history state from memento snapshots 
         """
-        if not self._redo_stack:
+        if not self._undo_mementos:
+                raise HistoryError("Calculator history is empty - no calculation to undo")
+        
+        self._redo_mementos.append(self.save_to_memento()) # Move to redo memento 
+        previous_state = self._undo_mementos.pop() # Remove from undo memento
+        self.restore_from_memento(previous_state)
+    
+    def redo(self) -> None:
+        """"
+        Restore next saved history state from memento snapshots
+        """
+        if not self._redo_mementos:
             raise HistoryError("No calculations to redo")
         
-        calculation = self._redo_stack.pop()
-        self._history.append(calculation)
-        return calculation
+        self._undo_mementos.append(self.save_to_memento()) # Move to undo memento
+        next_state = self._redo_mementos.pop() # Remove from redo memento 
+        self.restore_from_memento(next_state)
     
     def redo_is_empty(self) -> bool: 
         """
         Check if redo stack is empty
         """
-        return len(self._redo_stack) == 0
+        return len(self._redo_mementos) == 0
