@@ -150,3 +150,58 @@ def test_observer_gets_notified_when_calculation_is_added():
 
     assert len(logs) == 1
     assert "Addition" in logs[0]
+
+def test_history_to_list_of_dicts():
+    history = History()
+    calculation = CalculationFactory.create_calculation("add", 1, 1)
+
+    history.add_calculation(calculation)
+
+    rows = history.to_list_of_dicts()
+
+    assert len(rows) == 1
+    assert rows[0]["operation"] == "Addition"
+    assert rows[0]["operand1"] == 1
+    assert rows[0]["operand2"] == 1
+    assert rows[0]["result"] == 2
+
+def test_save_history_to_csv(tmp_path):
+    history = History()
+    calculation1 = CalculationFactory.create_calculation("add", 1, 1)
+    calculation2 = CalculationFactory.create_calculation("subtract", 1, 1)
+
+    history.add_calculation(calculation1)
+    history.add_calculation(calculation2)
+
+    file_path = tmp_path / "history.csv"
+    history.save_to_csv(str(file_path))
+
+    assert file_path.exists()
+
+
+def test_load_history_from_csv(tmp_path):
+    history = History()
+    calculation1 = CalculationFactory.create_calculation("add", 1, 1)
+    calculation2 = CalculationFactory.create_calculation("subtract", 1, 1)
+
+    history.add_calculation(calculation1)
+    history.add_calculation(calculation2)
+
+    file_path = tmp_path / "history.csv"
+    history.save_to_csv(str(file_path))
+
+    new_history = History()
+    new_history.load_from_csv(str(file_path))
+
+    loaded_items = new_history.get_history()
+
+    assert len(loaded_items) == 2
+    assert str(loaded_items[0]) == "Addition(1.0, 1.0) = 2.0"
+    assert str(loaded_items[1]) == "Subtraction(1.0, 1.0) = 0.0"
+
+
+def test_load_history_file_not_found():
+    history = History()
+
+    with pytest.raises(HistoryError, match="History file not found"):
+        history.load_from_csv("missing_file.csv")
