@@ -30,3 +30,10 @@ class CalculatorConfig:
         File path for autosave history CSV
         """
         return os.getenv("CALCULATOR_HISTORY_FILE", "history.csv")
+
+    @staticmethod
+    def get_log_file() -> str:
+        """
+        File path for calculator logs.
+        """
+        return os.getenv("CALCULATOR_LOG_FILE", "calculator.log")
