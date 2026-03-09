@@ -3,7 +3,7 @@ from app.calculation import CalculationFactory
 from app.exceptions import OperationError, ValidationError, HistoryError
 from app.input_validators import validate_two_valid_inputs
 from app.history import History
-from app.logger import LoggingObserver
+from app.logger import LoggingObserver, AutoSaveObserver
 
 def display_help() -> None:
     """ 
@@ -35,7 +35,10 @@ def Calculator():
     # Instantiate history list & observer 
     history_list = History()
     logging_observer = LoggingObserver()
+    autosave_observer = AutoSaveObserver(history_list)
+
     history_list.add_observer(logging_observer)
+    history_list.add_observer(autosave_observer)
 
     # Start Loop 
     while True: 
