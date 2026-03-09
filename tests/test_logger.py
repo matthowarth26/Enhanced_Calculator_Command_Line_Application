@@ -1,5 +1,6 @@
 import pandas as pd
 
+from pathlib import Path
 from app.calculation import CalculationFactory
 from app.logger import LoggingObserver, AutoSaveObserver
 from app.history import History
@@ -36,3 +37,28 @@ def test_autosave_observer_writes_csv(tmp_path):
     assert df.loc[0, "operand1"] == 1
     assert df.loc[0, "operand2"] == 1
     assert df.loc[0, "result"] == 2
+
+def test_logging_observer_stores_log_message():
+    observer = LoggingObserver()
+    calculation = CalculationFactory.create_calculation("add", 1, 1)
+
+    observer.update(calculation)
+
+    logs = observer.get_logs()
+
+    assert len(logs) == 1
+    assert "Logged calculation:" in logs[0]
+
+
+def test_logging_observer_writes_to_file(tmp_path):
+    log_file = tmp_path / "calculator.log"
+    observer = LoggingObserver(str(log_file))
+    calculation = CalculationFactory.create_calculation("add", 1, 1)
+
+    observer.update(calculation)
+
+    assert log_file.exists()
+
+    content = log_file.read_text()
+    assert "Logged calculation:" in content
+    assert "Addition(1, 1)" in content or "Addition(1.0, 1.0)" in content
