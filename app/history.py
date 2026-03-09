@@ -1,4 +1,6 @@
-from app.calculation import Calculation
+import pandas as pd 
+
+from app.calculation import CalculationFactory, Calculation
 from app.exceptions import HistoryError
 from app.calculator_memento import CalculatorMemento
 from app.logger import Observer
@@ -122,3 +124,59 @@ class History:
         Convert history into a list of dictionaries for saving
         """
         return [calculation.to_dict() for calculation in self._history]
+    
+    def save_to_csv(self, file_path: str) -> None:
+        """
+        Save current hsitory to CSV file
+        """
+        history_rows = self.to_list_of_dicts()
+        df = pd.DataFrame(history_rows)
+        df.to_csv(file_path, index=False)
+
+    def load_from_csv(self, file_path: str) -> None:
+        """
+        Load history from CSV file and rebuild calculation objects
+        """
+        try:
+            df = pd.read_csv(file_path)
+        except FileNotFoundError as e:
+            raise HistoryError(f"History file not found: {file_path}") from e
+        except Exception as e:
+            raise HistoryError(f"Failed to load history from file: {file_path}") from e
+
+        required_columns = {"operation", "operand1", "operand2"}
+        if not required_columns.issubset(df.columns):
+            raise HistoryError("CSV file is missing required columns")
+
+        loaded_history = []
+
+        for _, row in df.iterrows():
+            operation_name = str(row["operation"]).strip()
+
+            # Convert class-style names back into factory command names
+            operation_map = {
+                "Addition": "add",
+                "Subtraction": "subtract",
+                "Multiplication": "multiply",
+                "Division": "divide",
+                "Power": "power",
+                "Root": "root",
+                "Modulus": "modulus",
+                "IntegerDivision": "integer divide",
+                "Percentage": "percent",
+                "AbsoluteDifference": "absolute difference",
+            }
+
+            if operation_name not in operation_map:
+                raise HistoryError(f"Unsupported operation in CSV: {operation_name}")
+
+            calculation = CalculationFactory.create_calculation(
+                operation_map[operation_name],
+                float(row["operand1"]),
+                float(row["operand2"]),
+            )
+            loaded_history.append(calculation)
+
+        self._undo_mementos.append(self.save_to_memento())
+        self._history = loaded_history
+        self._redo_mementos.clear()        
