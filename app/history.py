@@ -116,3 +116,9 @@ class History:
         """
         for observer in self._observers:
             observer.update(calculation)
+    
+    def to_list_of_dicts(self) -> list[dict]:
+        """
+        Convert history into a list of dictionaries for saving
+        """
+        return [calculation.to_dict() for calculation in self._history]
