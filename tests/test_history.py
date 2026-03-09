@@ -2,6 +2,7 @@ import pytest
 from app.calculation import CalculationFactory
 from app.history import History
 from app.exceptions import HistoryError
+from app.logger import LoggingObserver
 
 def test_history_list_is_empty():
     history = History()
@@ -113,7 +114,7 @@ def test_redo_returns_next_state():
     history.add_calculation(calculation1)
     history.undo()
     history.redo()
-    
+
     assert len(history.get_history()) == 1
     assert history.return_last_calculation() == calculation1
 
@@ -136,3 +137,16 @@ def test_clear_redo_history_after_new_operation():
     history.add_calculation(calculation2)
 
     assert history.redo_is_empty() is True
+
+def test_observer_gets_notified_when_calculation_is_added():
+    history = History()
+    observer = LoggingObserver()
+    history.add_observer(observer)
+
+    calculation = CalculationFactory.create_calculation("add", 1, 1)
+    history.add_calculation(calculation)
+
+    logs = observer.get_logs()
+
+    assert len(logs) == 1
+    assert "Addition" in logs[0]
