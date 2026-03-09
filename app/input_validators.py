@@ -1,4 +1,5 @@
 from app.exceptions import ValidationError
+from app.calculator_config import CalculatorConfig
 
 def validate_input_is_number(value):
     """
@@ -10,10 +11,12 @@ def validate_input_is_number(value):
     except (TypeError, ValueError) as e:
         raise ValidationError(f"Invalid number: {value}") from e
 
-def validate_max_input_value(value, max_value=1_000_000_000):
+def validate_max_input_value(value: float) -> float:
     """
     Validate that user input does not exceed max value
     """
+    max_value = CalculatorConfig.get_max_input_value()
+
     if abs(value) > max_value:
         raise ValidationError(f"{value} exceeds maximum allowed value: {max_value}")
     
