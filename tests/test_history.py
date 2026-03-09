@@ -86,7 +86,7 @@ def test_drop_last_calculation_when_empty_error():
     with pytest.raises(HistoryError, match="Calculator history is empty"):
         history.drop_last_calculation()
 
-def test_undo_operation_move_to_redo_stack():
+def test_undo_restores_previous_state():
     history = History()
     calculation1 = CalculationFactory.create_calculation("add", 1, 1)
     calculation2 = CalculationFactory.create_calculation("subtract", 1, 1)
@@ -94,28 +94,26 @@ def test_undo_operation_move_to_redo_stack():
     history.add_calculation(calculation1)
     history.add_calculation(calculation2)
 
-    undone = history.undo()
+    history.undo()
 
-    assert undone == calculation2
     assert len(history.get_history()) == 1
     assert history.return_last_calculation() == calculation1
     assert history.redo_is_empty() is False
 
-def test_undo_operation_with_empty_history_error():
+def test_undo_operation_with_no_undo_states_error():
     history = History()
 
     with pytest.raises(HistoryError, match="Calculator history is empty - no calculation to undo"):
         history.undo()
 
-def test_redo_returns_last_undone_calculation():
+def test_redo_returns_next_state():
     history = History()
     calculation1 = CalculationFactory.create_calculation("add", 1, 1)
 
     history.add_calculation(calculation1)
     history.undo()
-    redone = history.redo()
-
-    assert redone == calculation1
+    history.redo()
+    
     assert len(history.get_history()) == 1
     assert history.return_last_calculation() == calculation1
 
