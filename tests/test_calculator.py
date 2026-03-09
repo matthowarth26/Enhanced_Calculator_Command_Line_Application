@@ -136,6 +136,8 @@ def test_help_message(monkeypatch):
     assert "absolute difference" in output 
     assert "history" in output
     assert "clear" in output
+    assert "save" in output
+    assert "load" in output
     assert "exit" in output
     assert "help" in output
 
@@ -182,3 +184,44 @@ def test_redo_calculation_empty_history_repl(monkeypatch):
     inputs = ["redo", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Error: No calculations to redo" in output
+
+"""Test Save/Load Functionality"""
+def test_save_command(monkeypatch, tmp_path):
+    test_file = tmp_path / "history.csv"
+
+    from app import calculator_config
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_history_file",
+        staticmethod(lambda: str(test_file))
+    )
+
+    inputs = ["add", "1", "1", "save", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+
+    assert f"History saved to {test_file}" in output
+    assert test_file.exists()
+
+
+def test_load_command(monkeypatch, tmp_path):
+    test_file = tmp_path / "history.csv"
+
+    from app.history import History
+    from app.calculation import CalculationFactory
+    from app import calculator_config
+
+    seeded_history = History()
+    seeded_history.add_calculation(CalculationFactory.create_calculation("add", 1, 1))
+    seeded_history.save_to_csv(str(test_file))
+
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_history_file",
+        staticmethod(lambda: str(test_file))
+    )
+
+    inputs = ["load", "history", "exit"]
+    output = run_calculator_repl_with_inputs(monkeypatch, inputs)
+
+    assert f"History loaded from {test_file}" in output
+    assert "Addition(1.0, 1.0) = 2.0" in output
