@@ -140,7 +140,7 @@ def Calculator():
         try: 
             a, b = validate_two_valid_inputs(a, b)
             calculation = CalculationFactory.create_calculation(user_input, a, b) # Use CalculationFactory method for inputted operation  
-            result = calculation.compute() 
+            result = calculation.get_rounded_result() 
             history_list.add_calculation(calculation) # Save operation in history list  
             print(f"Result: {result}")
             
