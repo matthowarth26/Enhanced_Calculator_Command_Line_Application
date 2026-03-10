@@ -85,7 +85,7 @@ def test_calculation_factory_modulus():
     assert calculation.compute() == 1
 
 def test_calculation_factory_int_divide():
-    calculation = CalculationFactory.create_calculation("integer divide", 10, 3)
+    calculation = CalculationFactory.create_calculation("int_divide", 10, 3)
     assert calculation.compute() == 3
 
 def test_calculation_factory_percent():
@@ -93,7 +93,7 @@ def test_calculation_factory_percent():
     assert calculation.compute() == 10
 
 def test_calculation_factory_abs_diff():
-    calculation = CalculationFactory.create_calculation("absolute difference", 4, 5)
+    calculation = CalculationFactory.create_calculation("abs_diff", 4, 5)
     assert calculation.compute() == 1
 
 def test_calculation_to_dict():
