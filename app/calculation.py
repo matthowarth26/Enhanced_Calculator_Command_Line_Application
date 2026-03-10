@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from app.operations import Operation
 from app.exceptions import OperationError
 from datetime import datetime 
+from app.calculator_config import CalculatorConfig
 
 class Calculation(ABC):
     """Abstract base class for calculation operations"""
@@ -15,12 +16,19 @@ class Calculation(ABC):
     def compute(self) -> float:
         pass  # pragma: no cover
 
+    def get_rounded_result(self) -> float:
+        """
+        Round result to specified precision
+        """
+        precision = CalculatorConfig.get_precision()
+        return round(self.compute(), precision) 
+
     def __str__(self):
-        result = self.compute()                                                 # Store result for history 
+        result = self.get_rounded_result()                                                 # Store result for history 
         return f"{self.__class__.__name__}({self.a}, {self.b}) = {result}"      # Updated result string for history Operation(a, b) = Result 
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(a={self.a}, b={self.b})"
+        return f"{self.__class__.__name__}(a={self.a}, b={self.b}, timestamp={self.timestamp!r})"
 
     def to_dict(self) -> dict:
         """
@@ -30,7 +38,7 @@ class Calculation(ABC):
             "operation": self.__class__.__name__,
             "operand1": self.a,
             "operand2": self.b,
-            "result": self.compute(),
+            "result": self.get_rounded_result(),
             "timestamp": self.timestamp.isoformat()
         }
 # Calculation Factory 
