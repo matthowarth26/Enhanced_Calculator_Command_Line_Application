@@ -29,14 +29,14 @@ class CalculatorConfig:
         """
         File path for autosave history CSV
         """
-        return os.getenv("CALCULATOR_HISTORY_DIR", "history.csv")
+        return os.getenv("CALCULATOR_HISTORY_FILE", "history.csv")
 
     @staticmethod
     def get_log_file() -> str:
         """
         File path for calculator logs
         """
-        return os.getenv("CALCULATOR_LOG_DIR", "calculator.log")
+        return os.getenv("CALCULATOR_LOG_FILE", "calculator.log")
 
     @staticmethod
     def get_max_history_size() -> int:
@@ -51,3 +51,32 @@ class CalculatorConfig:
         Number of decimal places for calculation results
         """
         return int(os.getenv("CALCULATOR_PRECISION", "6"))
+
+    @staticmethod
+    def get_default_encoding() -> str:
+        """
+        Default encoding used for CSV file opreations
+        """
+        return os.getenv("CALCULATOR_DEFAULT_ENCODING", "utf-8")
+    
+    @staticmethod
+    def get_log_dir() -> str:
+        """
+        Directory where log files are stored
+        """
+        return os.getenv("CALCULATOR_LOG_DIR", "logs")
+
+
+    @staticmethod
+    def get_history_dir() -> str:
+        """
+        Directory where history files are stored
+        """
+        return os.getenv("CALCULATOR_HISTORY_DIR", "data")
+    
+    @staticmethod
+    def ensure_directory(directory: str) -> None:
+        """
+        Create directory if it does not exist.
+        """
+        os.makedirs(directory, exist_ok=True)
