@@ -38,11 +38,13 @@ def Calculator():
     # Instantiate history list & observer 
     history_list = History()
     history_file = CalculatorConfig.get_history_file()
-    logging_observer = LoggingObserver()
-    autosave_observer = AutoSaveObserver(history_list)
 
+    logging_observer = LoggingObserver()
     history_list.add_observer(logging_observer)
-    history_list.add_observer(autosave_observer)
+
+    if CalculatorConfig.get_auto_save():
+        autosave_observer = AutoSaveObserver(history_list, history_file)
+        history_list.add_observer(autosave_observer)
 
     # Start Loop 
     while True: 
