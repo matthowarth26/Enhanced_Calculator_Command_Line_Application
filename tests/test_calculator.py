@@ -56,7 +56,7 @@ def test_modulus(monkeypatch):
     assert "Result: 1.0" in output
 
 def test_int_divide(monkeypatch):
-    inputs = ["integer divide", "10", "3", "exit"]
+    inputs = ["int_divide", "10", "3", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Result: 3.0" in output
 
@@ -66,7 +66,7 @@ def test_percent(monkeypatch):
     assert "Result: 10.0" in output
 
 def test_abs_diff(monkeypatch):
-    inputs = ["absolute difference", "4", "5", "exit"]
+    inputs = ["abs_diff", "4", "5", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Result: 1.0" in output
 
@@ -87,7 +87,7 @@ def test_modulus_with_zero(monkeypatch):
     assert "Error: Cannot perform modulus by zero" in output
 
 def test_int_divide_with_zero(monkeypatch):
-    inputs = ["integer divide", "10", "0", "exit"]
+    inputs = ["int_divide", "10", "0", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Error: Cannot perform integer division by zero" in output
 
@@ -101,7 +101,7 @@ def test_invalid_command(monkeypatch):
     inputs = ["square", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
     assert "Please choose from the list of available commands: add, subtract, multiply, divide, power, root, "
-    "modulus, integer divide, percent, absolute difference, history, clear, undo, redo, help, or exit." in output
+    "modulus, int_divide, percent, abs_diff, history, clear, undo, redo, help, or exit." in output
 
 def test_invalid_number(monkeypatch):
     inputs = ["add", "five", "3", "exit"]
@@ -131,9 +131,9 @@ def test_help_message(monkeypatch):
     assert "power" in output
     assert "root" in output
     assert "modulus" in output
-    assert "integer divide" in output
+    assert "int_divide" in output
     assert "percent" in output
-    assert "absolute difference" in output 
+    assert "abs_diff" in output 
     assert "history" in output
     assert "clear" in output
     assert "save" in output
