@@ -21,16 +21,16 @@ wheels/
 *.egg
 
 # Virtual Environment
-#venv/
-#env/
-#ENV/
-#.env
-#.venv
-#.python-version
+venv/
+env/
+ENV/
+.env
+.venv
+.python-version
 
 # Calculator-specific files
 logs/
-history/
+data/
 *.log
 *.csv
 calculator_history.*
