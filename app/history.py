@@ -139,14 +139,16 @@ class History:
         """
         history_rows = self.to_list_of_dicts()
         df = pd.DataFrame(history_rows)
-        df.to_csv(file_path, index=False)
+        encoding = CalculatorConfig.get_default_encoding()
+        df.to_csv(file_path, index=False, encoding=encoding)
 
     def load_from_csv(self, file_path: str) -> None:
         """
         Load history from CSV file and rebuild calculation objects
         """
         try:
-            df = pd.read_csv(file_path)
+            encoding = CalculatorConfig.get_default_encoding()
+            df = pd.read_csv(file_path, encoding=encoding)
         except FileNotFoundError as e:
             raise HistoryError(f"History file not found: {file_path}") from e
         except Exception as e:
