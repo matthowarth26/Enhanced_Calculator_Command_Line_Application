@@ -11,15 +11,16 @@ This project implements a modular calculation application that users can interac
    - Memento Pattern
    - Factory Pattern
 - Persistent data management 
-- History Management utilizing pandas dataframes
-- Auto-Saving and Loading history to CSV files 
-- User Commands - help, history, exit, clear, undo, redo, save and load 
+- History management utilizing pandas dataframes
+- Autosaving and loading history to CSV files 
+- User commands - help, history, exit, clear, undo, redo, save and load 
 - Comprehensive Error handling to manage invalid inputs and exceptions 
 - Test automation with GitHub Actions 
 
 
 # Featured Arithemtic Operations 
 
+Prompt the command-line interface with one of the supported arithmetic operations below. When prompted, input the first number followed by the second number to perform the operation. 
 - add
 - subtract
 - multiply
@@ -34,6 +35,7 @@ This project implements a modular calculation application that users can interac
 
 # Additional Supported Commands
 
+For additional support or history operations, prompt the command-line interface with one of the following commands:
 - history - Show calculation history
 - clear - Clear calculation history
 - undo - Undo the last calculation
@@ -67,7 +69,7 @@ Running the Project
 python main.py
 ```
 
-# Configuration Management
+# Configuration Setup
 
 Python-dotenv is used to load configuration values from a .env file. 
 
@@ -82,4 +84,33 @@ CALCULATOR_LOG_DIR=logs
 CALCULATOR_HISTORY_DIR=data
 CALCULATOR_HISTORY_FILE=history.csv
 CALCULATOR_LOG_FILE=calculator.log
+```
+
+# Running Unit and Coverage Tests
+
+Run unit tests with pytest:
+```
+pytest
+```
+
+Run coverage tests with pytest: 
+```
+pytest --cov=app
+```
+
+# CI/CD Information:
+
+GitHub actions is configured to automatically run unit and coverage tests on all push and pull requests. 
+
+GitHub Actions Workflow:
+ - Checkout code using `actions/checkout`
+ - Set up Python environment using `actions/setup-python`
+ - Install dependencies from `requirements.txt`
+ - Run tests by executing `pytest`
+ - Measure test coverage using `pytest-cov`
+ - Ensure CI pipeline fails if test coverage falls below (90%)
+
+Configuration File:
+```
+.github/workflows/python-app.yml
 ```
