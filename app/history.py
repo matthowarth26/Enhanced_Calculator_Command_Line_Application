@@ -5,6 +5,7 @@ from app.calculation import CalculationFactory, Calculation
 from app.exceptions import HistoryError
 from app.calculator_memento import CalculatorMemento
 from app.logger import Observer
+from app.calculator_config import CalculatorConfig
 
 class History:
     """
@@ -39,6 +40,12 @@ class History:
         self._undo_mementos.append(self.save_to_memento())
         self._history.append(calculation)
         self._redo_mementos.clear()
+
+        # Enforce max calculations stored in history 
+        max_history_size = CalculatorConfig.get_max_history_size()
+        if len(self._history) > max_history_size:
+                self._history.pop(0)
+
         self.notify_observers(calculation)
     
     def get_history(self) -> list[Calculation]:
