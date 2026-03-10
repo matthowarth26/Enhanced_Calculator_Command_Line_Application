@@ -4,6 +4,7 @@ from app.history import History
 from app.exceptions import HistoryError
 from app.logger import LoggingObserver
 
+"""Test History List and Dictionaries"""
 def test_history_list_is_empty():
     history = History()
     assert history.get_history() == []
@@ -43,7 +44,7 @@ def test_history_is_empty_true():
     history = History()
     assert history.is_empty() is True
 
-def test_history_is_empty_fale():
+def test_history_is_empty_false():
     history = History()
     calculation = CalculationFactory.create_calculation("add", 1, 1)
 
@@ -87,6 +88,7 @@ def test_drop_last_calculation_when_empty_error():
     with pytest.raises(HistoryError, match="Calculator history is empty"):
         history.drop_last_calculation()
 
+"""Test Undo/Redo Functionality"""
 def test_undo_restores_previous_state():
     history = History()
     calculation1 = CalculationFactory.create_calculation("add", 1, 1)
@@ -138,6 +140,7 @@ def test_clear_redo_history_after_new_operation():
 
     assert history.redo_is_empty() is True
 
+"""Test Observer Memento"""
 def test_observer_gets_notified_when_calculation_is_added():
     history = History()
     observer = LoggingObserver()
@@ -166,6 +169,7 @@ def test_history_to_list_of_dicts():
     assert rows[0]["result"] == 2
     assert "timestamp" in rows[0]
 
+"""Test Saving and Loading History to CSV"""
 def test_save_history_to_csv(tmp_path):
     history = History()
     calculation1 = CalculationFactory.create_calculation("add", 1, 1)
@@ -206,3 +210,50 @@ def test_load_history_file_not_found():
 
     with pytest.raises(HistoryError, match="History file not found"):
         history.load_from_csv("missing_file.csv")
+
+"""Test History Max Size"""
+def test_history_max_size(monkeypatch):
+    from app import calculator_config
+
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_max_history_size",
+        staticmethod(lambda: 2),
+    )
+
+    history = History()
+    calc1 = CalculationFactory.create_calculation("add", 1, 1)
+    calc2 = CalculationFactory.create_calculation("subtract", 1, 1)
+    calc3 = CalculationFactory.create_calculation("multiply", 2, 4)
+
+    history.add_calculation(calc1)
+    history.add_calculation(calc2)
+    history.add_calculation(calc3)
+
+    stored = history.get_history()
+
+    assert len(stored) == 2
+    assert stored[0] == calc2
+    assert stored[1] == calc3
+
+def test_history_under_max_size_keeps_all_entries(monkeypatch):
+    from app import calculator_config
+
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_max_history_size",
+        staticmethod(lambda: 5),
+    )
+
+    history = History()
+    calc1 = CalculationFactory.create_calculation("add", 1, 1)
+    calc2 = CalculationFactory.create_calculation("subtract", 3, 1)
+
+    history.add_calculation(calc1)
+    history.add_calculation(calc2)
+
+    stored = history.get_history()
+
+    assert len(stored) == 2
+    assert stored[0] == calc1
+    assert stored[1] == calc2
