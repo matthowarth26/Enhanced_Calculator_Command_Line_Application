@@ -1,4 +1,5 @@
 import pandas as pd 
+from datetime import datetime 
 
 from app.calculation import CalculationFactory, Calculation
 from app.exceptions import HistoryError
@@ -170,11 +171,19 @@ class History:
             if operation_name not in operation_map:
                 raise HistoryError(f"Unsupported operation in CSV: {operation_name}")
 
+            timestamp = None 
+
+            if "timestamp" in row and not pd.isna(row["timestamp"]):
+                timestamp = datetime.fromisoformat(str(row["timestamp"]))
+
             calculation = CalculationFactory.create_calculation(
                 operation_map[operation_name],
                 float(row["operand1"]),
                 float(row["operand2"]),
             )
+            
+            calculation.timestamp = timestamp or datetime.now()
+            
             loaded_history.append(calculation)
 
         self._undo_mementos.append(self.save_to_memento())
