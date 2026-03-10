@@ -15,7 +15,7 @@ class Observer(ABC):
        """"
        Respond to a new calculation event
        """
-       pass
+       pass # pragma: no cover
 
 class LoggingObserver(Observer):
     """
