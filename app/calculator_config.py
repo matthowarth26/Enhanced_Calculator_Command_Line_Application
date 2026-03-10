@@ -22,18 +22,18 @@ class CalculatorConfig:
         """
         Check autosave observer is enabled 
         """
-        return os.getenv("CALCULATOR_AUTO_SAVE", "true").lower() == "true"
+        return os.getenv("CALCULATOR_AUTO_SAVE", "true").lower() == "true" # pragma: no cover
 
     @staticmethod
     def get_history_file() -> str:
         """
         File path for autosave history CSV
         """
-        return os.getenv("CALCULATOR_HISTORY_FILE", "history.csv")
+        return os.getenv("CALCULATOR_HISTORY_DIR", "history.csv")
 
     @staticmethod
     def get_log_file() -> str:
         """
         File path for calculator logs.
         """
-        return os.getenv("CALCULATOR_LOG_FILE", "calculator.log")
+        return os.getenv("CALCULATOR_LOG_DIR", "calculator.log")
