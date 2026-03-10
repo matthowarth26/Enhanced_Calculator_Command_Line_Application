@@ -66,3 +66,20 @@ Running the Project
 ```
 python main.py
 ```
+
+# Configuration Management
+
+Python-dotenv is used to load configuration values from a .env file. 
+
+Sample .env file:
+```
+CALCULATOR_MAX_INPUT_VALUE=1000000000
+CALCULATOR_AUTO_SAVE=true
+CALCULATOR_MAX_HISTORY_SIZE=100
+CALCULATOR_PRECISION=2
+CALCULATOR_DEFAULT_ENCODING=utf-8
+CALCULATOR_LOG_DIR=logs
+CALCULATOR_HISTORY_DIR=data
+CALCULATOR_HISTORY_FILE=history.csv
+CALCULATOR_LOG_FILE=calculator.log
+```
