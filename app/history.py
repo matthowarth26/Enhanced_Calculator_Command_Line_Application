@@ -162,9 +162,9 @@ class History:
                 "Power": "power",
                 "Root": "root",
                 "Modulus": "modulus",
-                "IntegerDivision": "integer divide",
+                "IntegerDivision": "int_divide",
                 "Percentage": "percent",
-                "AbsoluteDifference": "absolute difference",
+                "AbsoluteDifference": "abs_diff",
             }
 
             if operation_name not in operation_map:
