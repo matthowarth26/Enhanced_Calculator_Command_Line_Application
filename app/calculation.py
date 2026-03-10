@@ -12,7 +12,7 @@ class Calculation(ABC):
 
     @abstractmethod
     def compute(self) -> float:
-        pass 
+        pass  # pragma: no cover
 
     def __str__(self):
         result = self.compute()                                                 # Store result for history 
@@ -84,9 +84,9 @@ class CalculationFactory:
         "power": Power,
         "root": Root,
         "modulus": Modulus,
-        "integer divide": IntegerDivision,
+        "int_divide": IntegerDivision,
         "percent": Percentage,
-        "absolute difference": AbsoluteDifference,
+        "abs_diff": AbsoluteDifference,
     }
 
     @classmethod
