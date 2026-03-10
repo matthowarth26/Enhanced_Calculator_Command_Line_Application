@@ -1,5 +1,6 @@
 """Calulator REPL"""
 import os
+import logging 
 
 from app.calculation import CalculationFactory
 from app.exceptions import OperationError, ValidationError, HistoryError
@@ -15,7 +16,7 @@ def display_help() -> None:
     # List of possible operations 
     operation_list = CalculationFactory.get_supported_operations()
 
-    print("\nAvailable commands:")
+    print("\nAvailable operations:")
     for operation in operation_list:
         print(f" - {operation}")
 
@@ -50,6 +51,8 @@ def Calculator():
 
     logging_observer = LoggingObserver()
     history_list.add_observer(logging_observer)
+
+    logger = logging.getLogger(f"calculator_logger_{logging_observer.log_file}")
 
     if CalculatorConfig.get_auto_save():
         autosave_observer = AutoSaveObserver(history_list, history_file)
@@ -92,6 +95,7 @@ def Calculator():
                 history_list.undo()
                 print("Undo calculation")
             except HistoryError as e:
+                logger.error(f"History error: {e}")
                 print(f"Error: {e}")
             continue
 
@@ -100,6 +104,7 @@ def Calculator():
                 history_list.redo() 
                 print("Redo calculation")
             except HistoryError as e:
+                logger.error(f"History error: {e}")
                 print(f"Error: {e}")
             continue 
 
@@ -108,6 +113,7 @@ def Calculator():
                 history_list.save_to_csv(history_file)
                 print(f"History saved to {history_file}")
             except HistoryError as e:
+                logger.error(f"History error: {e}")
                 print(f"Error: {e}")
             continue
 
@@ -116,12 +122,14 @@ def Calculator():
                 history_list.load_from_csv(history_file)
                 print(f"History loaded from {history_file}")
             except HistoryError as e:
+                logger.error(f"History error: {e}")
                 print(f"Error: {e}")
             continue
 
         # Check if user inputs an invalid operation 
         if user_input not in operation_list:
-            print("Please choose from the list of available commands: " 
+            logger.warning(f"Invalid operation entered: {user_input}")
+            print("Please choose from the list of available operations: " 
                   + ", ".join(operation_list)+", history, clear, undo, redo, save, load, help, or exit.")
             continue 
         
@@ -142,7 +150,9 @@ def Calculator():
             calculation = CalculationFactory.create_calculation(user_input, a, b) # Use CalculationFactory method for inputted operation  
             result = calculation.get_rounded_result() 
             history_list.add_calculation(calculation) # Save operation in history list  
+            logger.info(f"Calculation performed: {calculation}")
             print(f"Result: {result}")
             
         except (ValidationError, OperationError) as e:
+            logger.error(f"Calculation error: {e}")   
             print(f"Error: {e}")
