@@ -34,6 +34,20 @@ class CalculatorConfig:
     @staticmethod
     def get_log_file() -> str:
         """
-        File path for calculator logs.
+        File path for calculator logs
         """
         return os.getenv("CALCULATOR_LOG_DIR", "calculator.log")
+
+    @staticmethod
+    def get_max_history_size() -> int:
+        """
+        Max calculations stored in history
+        """
+        return int(os.getenv("CALCULATOR_MAX_HISTORY_SIZE", "100"))
+
+    @staticmethod
+    def get_precision() -> int:
+        """
+        Number of decimal places for calculation results
+        """
+        return int(os.getenv("CALCULATOR_PRECISION", "6"))
