@@ -164,6 +164,7 @@ def test_history_to_list_of_dicts():
     assert rows[0]["operand1"] == 1
     assert rows[0]["operand2"] == 1
     assert rows[0]["result"] == 2
+    assert "timestamp" in rows[0]
 
 def test_save_history_to_csv(tmp_path):
     history = History()
