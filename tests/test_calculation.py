@@ -54,7 +54,9 @@ def test_str():
 
 def test_repr():
     calculation = Addition(1, 1)
-    assert repr(calculation) == "Addition(a=1, b=1)"
+    result = repr(calculation)
+    assert "Addition(a=1, b=1" in result
+    assert "timestamp=" in result
 
 def test_calculation_factory_addition():
     calculation = CalculationFactory.create_calculation("add", 1, 1)
