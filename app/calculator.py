@@ -1,4 +1,6 @@
 """Calulator REPL"""
+import os
+
 from app.calculation import CalculationFactory
 from app.exceptions import OperationError, ValidationError, HistoryError
 from app.input_validators import validate_two_valid_inputs
@@ -37,7 +39,14 @@ def Calculator():
 
     # Instantiate history list & observer 
     history_list = History()
-    history_file = CalculatorConfig.get_history_file()
+
+    history_dir = CalculatorConfig.get_history_dir()
+    CalculatorConfig.ensure_directory(history_dir)
+
+    history_file = os.path.join(
+        history_dir,
+        CalculatorConfig.get_history_file()
+    )
 
     logging_observer = LoggingObserver()
     history_list.add_observer(logging_observer)
