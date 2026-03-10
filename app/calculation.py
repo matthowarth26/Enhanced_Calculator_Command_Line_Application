@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
 from app.operations import Operation
 from app.exceptions import OperationError
-
+from datetime import datetime 
 
 class Calculation(ABC):
     """Abstract base class for calculation operations"""
 
-    def __init__(self, a: float, b: float) -> None:
+    def __init__(self, a: float, b: float, timestamp: datetime | None = None) -> None:
         self.a = a 
         self.b = b
+        self.timestamp = timestamp or datetime.now()
 
     @abstractmethod
     def compute(self) -> float:
@@ -29,7 +30,8 @@ class Calculation(ABC):
             "operation": self.__class__.__name__,
             "operand1": self.a,
             "operand2": self.b,
-            "result": self.compute()
+            "result": self.compute(),
+            "timestamp": self.timestamp.isoformat()
         }
 # Calculation Factory 
 class Addition(Calculation):
