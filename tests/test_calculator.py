@@ -100,7 +100,7 @@ def test_percent_with_zero(monkeypatch):
 def test_invalid_command(monkeypatch):
     inputs = ["square", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
-    assert "Please choose from the list of available commands: add, subtract, multiply, divide, power, root, "
+    assert "Please choose from the list of available operations: add, subtract, multiply, divide, power, root, "
     "modulus, int_divide, percent, abs_diff, history, clear, undo, redo, help, or exit." in output
 
 def test_invalid_number(monkeypatch):
@@ -123,7 +123,7 @@ def test_exit(monkeypatch):
 def test_help_message(monkeypatch):
     inputs = ["help", "exit"]
     output = run_calculator_repl_with_inputs(monkeypatch, inputs)
-    assert "Available commands:" in output
+    assert "Available operations:" in output
     assert "add" in output
     assert "subtract" in output
     assert "multiply" in output
