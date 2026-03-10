@@ -104,3 +104,41 @@ def test_calculation_to_dict():
     assert result["operand1"] == 1
     assert result["operand2"] == 1
     assert result["result"] == 2
+
+def test_get_rounded_result(monkeypatch):
+    from app import calculator_config
+
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_precision",
+        staticmethod(lambda: 2),
+    )
+
+    calculation = Division(10, 3)
+    assert calculation.get_rounded_result() == 3.33
+
+def test_to_dict_uses_configured_precision(monkeypatch):
+    from app import calculator_config
+
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_precision",
+        staticmethod(lambda: 2),
+    )
+
+    calculation = Division(10, 3)
+    result = calculation.to_dict()
+
+    assert result["result"] == 3.33
+
+def test_str_uses_configured_precision(monkeypatch):
+    from app import calculator_config
+
+    monkeypatch.setattr(
+        calculator_config.CalculatorConfig,
+        "get_precision",
+        staticmethod(lambda: 2),
+    )
+
+    calculation = Division(10, 3)
+    assert str(calculation) == "Division(10, 3) = 3.33"
